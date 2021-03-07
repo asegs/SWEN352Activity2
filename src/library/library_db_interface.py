@@ -3,9 +3,10 @@ Filename: library_db_interface.py
 Description: module used for interacting with the local database
 """
 
-from library.patron import Patron
 from tinydb import TinyDB, Query
-import os
+
+from library.patron import Patron
+
 
 class Library_DB:
     """Class for the local library database."""
