@@ -3,7 +3,7 @@ from unittest.mock import Mock
 
 from library.library import Library
 
-dummy_json = [
+dummy_book_list_json = [
     {
         'title': 'Adventures of Elvis',
         'ebook_count': 2
@@ -21,7 +21,11 @@ dummy_json = [
         'ebook_count': 0
     },
 ]
-
+dummy_author_book_list_json = [
+    'Adventures of life',
+    'Meet me now',
+    'Hello, you again?'
+]
 
 class TestLibrary(TestCase):
 
@@ -41,7 +45,7 @@ class TestLibrary(TestCase):
         # Action
         lib_obj = Library()
         lib_obj.api = Mock()
-        lib_obj.api.get_ebooks.return_value = dummy_json
+        lib_obj.api.get_ebooks.return_value = dummy_book_list_json
 
         # Assert
         self.assertTrue(lib_obj.is_ebook(book_title))
@@ -53,7 +57,7 @@ class TestLibrary(TestCase):
         # Action
         lib_obj = Library()
         lib_obj.api = Mock()
-        lib_obj.api.get_ebooks.return_value = dummy_json
+        lib_obj.api.get_ebooks.return_value = dummy_book_list_json
 
         # Assert
         self.assertFalse(lib_obj.is_ebook(book_title))
@@ -65,7 +69,7 @@ class TestLibrary(TestCase):
         # Action
         lib_obj = Library()
         lib_obj.api = Mock()
-        lib_obj.api.get_ebooks.return_value = dummy_json
+        lib_obj.api.get_ebooks.return_value = dummy_book_list_json
 
         # Assert
         # The original method needs to be corrected
@@ -78,12 +82,11 @@ class TestLibrary(TestCase):
         # Action
         lib_obj = Library()
         lib_obj.api = Mock()
-        lib_obj.api.get_ebooks.return_value = dummy_json
+        lib_obj.api.get_ebooks.return_value = dummy_book_list_json
 
         # Assert
         # The original method needs to be corrected
         self.assertNotEqual(lib_obj.get_ebooks_count(book_title), 2)
-
 
     def test_gets_book_count_if_no_book_is_there(self):
         # Assume
@@ -92,28 +95,50 @@ class TestLibrary(TestCase):
         # Action
         lib_obj = Library()
         lib_obj.api = Mock()
-        lib_obj.api.get_ebooks.return_value = dummy_json
+        lib_obj.api.get_ebooks.return_value = dummy_book_list_json
 
         # Assert
         # The original method needs to be corrected
         self.assertNotEqual(lib_obj.get_ebooks_count(book_title), 2)
 
-
     def test_author_entered_for_book_is_true(self):
         # Assume
+        book_title = 'Adventures of life'
+        book_author = 'Dummy Name'
 
         # Action
+        lib_obj = Library()
+        lib_obj.api = Mock()
+        lib_obj.api.books_by_author.return_value = dummy_author_book_list_json
 
         # Assert
-        pass
+        self.assertTrue(lib_obj.is_book_by_author(book_author, book_title))
 
     def test_author_entered_for_book_is_false(self):
         # Assume
+        book_title = 'Adventures of life?'
+        book_author = 'Dummy Name'
 
         # Action
+        lib_obj = Library()
+        lib_obj.api = Mock()
+        lib_obj.api.books_by_author.return_value = dummy_author_book_list_json
 
         # Assert
-        pass
+        self.assertFalse(lib_obj.is_book_by_author(book_author, book_title))
+
+    def test_author_entered_for_book_has_no_book_in_library(self):
+        # Assume
+        book_title = 'Adventures of life'
+        book_author = 'Dummy Name'
+
+        # Action
+        lib_obj = Library()
+        lib_obj.api = Mock()
+        lib_obj.api.books_by_author.return_value = []
+
+        # Assert
+        self.assertFalse(lib_obj.is_book_by_author(book_author, book_title))
 
     def test_gets_languages_for_the_book(self):
         # Assume
