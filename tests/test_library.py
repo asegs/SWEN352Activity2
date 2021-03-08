@@ -27,6 +27,22 @@ dummy_author_book_list_json = [
     'Hello, you again?'
 ]
 
+book_language_list = [
+            {
+                'language': 'english'
+            },
+            {
+                'language': 'hindi'
+            },
+            {
+                'language': 'spanish'
+            },
+            {
+                'language': 'russian'
+            },
+        ]
+
+
 class TestLibrary(TestCase):
 
     def test_constructor_works_as_intended(self):
@@ -142,10 +158,15 @@ class TestLibrary(TestCase):
 
     def test_gets_languages_for_the_book(self):
         # Assume
-
+        book_title = 'Something'
         # Action
-
+        lib_obj = Library()
+        lib_obj.api = Mock()
+        lib_obj.api.get_book_info.return_value = book_language_list
         # Assert
+
+        languages = lib_obj.get_languages_for_book(book_title)
+        self.assertEqual(len(languages), len(book_language_list))
         pass
 
     def test_gets_one_language_for_the_book(self):
