@@ -21,6 +21,26 @@ dummy_book_list_json = [
         'ebook_count': 0
     },
 ]
+
+dummy_similar_book_list_json = [
+{
+        'title': 'Adventures of Elvis',
+        'ebook_count': 2
+    },
+    {
+        'title': 'Elvis is Here',
+        'ebook_count': 4
+    },
+    {
+        'title': 'Adventure time',
+        'ebook_count': 1
+    },
+    {
+        'title': 'Adventures of Alibaba',
+        'ebook_count': 3
+    },
+]
+
 dummy_author_book_list_json = [
     'Adventures of life',
     'Meet me now',
@@ -85,11 +105,10 @@ class TestLibrary(TestCase):
         # Action
         lib_obj = Library()
         lib_obj.api = Mock()
-        lib_obj.api.get_ebooks.return_value = dummy_book_list_json
+        lib_obj.api.get_ebooks.return_value = dummy_similar_book_list_json
 
         # Assert
-        # The original method needs to be corrected
-        self.assertNotEqual(lib_obj.get_ebooks_count(book_title), 2)
+        self.assertEqual(lib_obj.get_ebooks_count(book_title), 10)
 
     def test_gets_book_count_for_zero_books(self):
         # Assume
@@ -98,11 +117,10 @@ class TestLibrary(TestCase):
         # Action
         lib_obj = Library()
         lib_obj.api = Mock()
-        lib_obj.api.get_ebooks.return_value = dummy_book_list_json
+        lib_obj.api.get_ebooks.return_value = []
 
         # Assert
-        # The original method needs to be corrected
-        self.assertNotEqual(lib_obj.get_ebooks_count(book_title), 2)
+        self.assertEqual(lib_obj.get_ebooks_count(book_title), 0)
 
     def test_gets_book_count_if_no_book_is_there(self):
         # Assume
@@ -111,11 +129,15 @@ class TestLibrary(TestCase):
         # Action
         lib_obj = Library()
         lib_obj.api = Mock()
-        lib_obj.api.get_ebooks.return_value = dummy_book_list_json
+        lib_obj.api.get_ebooks.return_value = [
+            {
+                'title': 'Adventures of Dino',
+                'ebook_count': 0
+            },
+        ]
 
         # Assert
-        # The original method needs to be corrected
-        self.assertNotEqual(lib_obj.get_ebooks_count(book_title), 2)
+        self.assertEqual(lib_obj.get_ebooks_count(book_title), 0)
 
     def test_author_entered_for_book_is_true(self):
         # Assume
