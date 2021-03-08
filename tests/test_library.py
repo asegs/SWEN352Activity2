@@ -23,7 +23,7 @@ dummy_book_list_json = [
 ]
 
 dummy_similar_book_list_json = [
-{
+    {
         'title': 'Adventures of Elvis',
         'ebook_count': 2
     },
@@ -48,19 +48,22 @@ dummy_author_book_list_json = [
 ]
 
 book_language_list = [
-            {
-                'language': 'english'
-            },
-            {
-                'language': 'hindi'
-            },
-            {
-                'language': 'spanish'
-            },
-            {
-                'language': 'russian'
-            },
-        ]
+    {
+        'language': ['eng']
+    },
+    {
+        'language': ['fre']
+    },
+    {
+        'language': ['hindi']
+    },
+    {
+        'language': ['lit']
+    },
+    {
+        'language': ['spa']
+    },
+]
 
 
 class TestLibrary(TestCase):
@@ -180,40 +183,69 @@ class TestLibrary(TestCase):
 
     def test_gets_languages_for_the_book(self):
         # Assume
-        book_title = 'Something'
+        book_title = 'Harry Potter'
+
         # Action
         lib_obj = Library()
         lib_obj.api = Mock()
         lib_obj.api.get_book_info.return_value = book_language_list
-        # Assert
-
         languages = lib_obj.get_languages_for_book(book_title)
+
+        # Assert
         self.assertEqual(len(languages), len(book_language_list))
-        pass
 
     def test_gets_one_language_for_the_book(self):
         # Assume
+        book_title = 'Harry Potter'
+        language_list = [
+            {
+                'language': ['eng']
+            }
+        ]
 
         # Action
+        lib_obj = Library()
+        lib_obj.api = Mock()
+        lib_obj.api.get_book_info.return_value = language_list
+        languages = lib_obj.get_languages_for_book(book_title)
 
         # Assert
-        pass
+        self.assertEqual(len(languages), 1)
 
     def test_gets_zero_language_for_no_book(self):
         # Assume
+        book_title = 'Harry Potter'
+        language_list = []
 
         # Action
+        lib_obj = Library()
+        lib_obj.api = Mock()
+        lib_obj.api.get_book_info.return_value = language_list
+        languages = lib_obj.get_languages_for_book(book_title)
 
         # Assert
-        pass
+        self.assertEqual(len(languages), 0)
 
     def test_gets_the_correct_languages_for_the_book(self):
         # Assume
+        book_title = 'Harry Potter'
 
         # Action
+        lib_obj = Library()
+        lib_obj.api = Mock()
+        lib_obj.api.get_book_info.return_value = book_language_list
+        languages = lib_obj.get_languages_for_book(book_title)
+        all_languages = list()
+        for ebook in book_language_list:
+            all_languages.append(ebook['language'][0])
+        is_same = True
+        for lang in languages:
+            if lang not in all_languages:
+                is_same = False
+                break
 
         # Assert
-        pass
+        self.assertTrue(is_same)
 
     def test_patron_added_to_library_db(self):
         # Assume
