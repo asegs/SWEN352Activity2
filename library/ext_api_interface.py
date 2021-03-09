@@ -17,7 +17,7 @@ class Books_API:
         :returns: the JSON body of the request, None if non 200 status code or ConnectionError
         """
         try:
-            response = requests.get(url)
+            response =  requests.get(url)
             if response.status_code != 200:
                 return None
             return response.json()
