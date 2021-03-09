@@ -1,8 +1,8 @@
+import unittest
 from unittest import TestCase
 from unittest.mock import Mock
 import os.path
 from os import path
-
 from library.library import Library
 from library.library_db_interface import Library_DB
 from library.patron import Patron
@@ -71,6 +71,11 @@ book_language_list = [
 
 
 class TestLibrary(TestCase):
+
+    def setUp(self) -> None:
+        self.library = Library()
+        self.patron = Patron()
+        self.library_db = Library_DB()
 
     def test_constructor_works_as_intended(self):
         # Assume
@@ -269,7 +274,6 @@ class TestLibrary(TestCase):
 
         # Action
         lib_obj = Library()
-        lib_obj.db.get_patron_count()
         lib_obj.register_patron(first_name, last_name, age, member_id)
         storage_count = lib_obj.db.get_patron_count()
         # Removes the instance of the db.json created
@@ -288,15 +292,14 @@ class TestLibrary(TestCase):
 
         # Action
         lib_obj = Library()
-        lib_obj.db.get_patron_count()
-        id = lib_obj.register_patron(first_name, last_name, age, member_id)
-        id = lib_obj.register_patron(first_name, last_name, age, member_id)
+        lib_obj.register_patron(first_name, last_name, age, member_id)
+        is_patron_present = lib_obj.db.retrieve_patron(member_id)
         # Removes the instance of the db.json created
         if path.exists('db.json'):
             os.remove('db.json')
 
         # Assert
-        self.assertEqual(None, id)
+        self.assertTrue(is_patron_present)
 
     def test_patron_is_registered_in_db(self):
         # Assume
@@ -306,15 +309,16 @@ class TestLibrary(TestCase):
         member_id = 100001
 
         # Action
+        patron = Patron(first_name, last_name, age, member_id)
         lib_obj = Library()
-        lib_obj.db.get_patron_count()
-        id = lib_obj.register_patron(first_name, last_name, age, member_id)
+        lib_obj.register_patron(first_name, last_name, age, member_id)
+        is_patron_registered = lib_obj.is_patron_registered(patron)
         # Removes the instance of the db.json created
         if path.exists('db.json'):
             os.remove('db.json')
 
         # Assert
-        self.assertEqual(id, 1)
+        self.assertTrue(is_patron_registered)
 
     def test_another_patron_exists_in_db(self):
         # Assume
@@ -331,14 +335,15 @@ class TestLibrary(TestCase):
         # Action
         lib_obj = Library()
         lib_obj.db.get_patron_count()
-        id = lib_obj.register_patron(first_name, last_name, age, member_id)
-        id = lib_obj.register_patron(fnamr, lname, age_2, member_id_2)
+        lib_obj.register_patron(first_name, last_name, age, member_id)
+        lib_obj.register_patron(fnamr, lname, age_2, member_id_2)
+        patron = lib_obj.db.retrieve_patron(member_id_2)
         # Removes the instance of the db.json created
         if path.exists('db.json'):
             os.remove('db.json')
 
         # Assert
-        self.assertEqual(id, 2)
+        self.assertEqual(patron.get_memberID(), member_id_2)
 
     def test_patron_is_not_registered_in_db(self):
         # Assume
@@ -349,41 +354,84 @@ class TestLibrary(TestCase):
 
         # Action
         lib_obj = Library()
+        patron = Patron('Messi', 'Dahl', 88, 102002)
+        lib_obj.register_patron(first_name, last_name, age, member_id)
+        is_patron_registered = lib_obj.is_patron_registered(patron)
 
-        lib_obj.db.get_patron_count()
-        id = lib_obj.register_patron(first_name, last_name, age, member_id)
-
-        # Assert
-        self.assertEqual(1, 2)
-
-    def test_patron_has_borrowed_book(self):
-        # Assume
-
-        # Action
+        # Removes the instance of the db.json created
+        if path.exists('db.json'):
+            os.remove('db.json')
 
         # Assert
-        pass
+        self.assertFalse(is_patron_registered)
 
     def test_has_patron_borrowed_book_true(self):
         # Assume
+        first_name = 'Sam'
+        last_name = 'Wheeler'
+        age = 27
+        member_id = 100001
+        patron = Patron(first_name, last_name, age, member_id)
+        book_title = 'Adventures of Tintin'
 
         # Action
+        lib_obj = Library()
+        lib_obj.register_patron(first_name, last_name, age, member_id)
+        lib_obj.borrow_book(book_title, patron)
+        is_book_borrowed = lib_obj.is_book_borrowed(book_title, patron)
+
+        # Removes the instance of the db.json created
+        if path.exists('db.json'):
+            os.remove('db.json')
 
         # Assert
-        pass
+        self.assertTrue(is_book_borrowed)
 
     def test_has_patron_borrowed_book_false(self):
         # Assume
+        first_name = 'Sam'
+        last_name = 'Wheeler'
+        age = 27
+        member_id = 100001
+        patron = Patron(first_name, last_name, age, member_id)
+        book_title = 'Adventures of Tintin'
+        another_book_title = 'NO adventure here'
 
         # Action
+        lib_obj = Library()
+        lib_obj.register_patron(first_name, last_name, age, member_id)
+        lib_obj.borrow_book(book_title, patron)
+        is_book_borrowed = lib_obj.is_book_borrowed(another_book_title, patron)
+
+        # Removes the instance of the db.json created
+        if path.exists('db.json'):
+            os.remove('db.json')
 
         # Assert
-        pass
+        self.assertFalse(is_book_borrowed)
 
     def test_patron_has_returned_book(self):
         # Assume
+        first_name = 'Sam'
+        last_name = 'Wheeler'
+        age = 27
+        member_id = 100001
+        patron = Patron(first_name, last_name, age, member_id)
+        book_title = 'Adventures of Tintin'
 
         # Action
+        lib_obj = Library()
+        lib_obj.register_patron(first_name, last_name, age, member_id)
+        lib_obj.borrow_book(book_title, patron)
+        lib_obj.return_borrowed_book(book_title, patron)
+        is_book_borrowed = lib_obj.is_book_borrowed(book_title, patron)
+
+        # Removes the instance of the db.json created
+        if path.exists('db.json'):
+            os.remove('db.json')
 
         # Assert
-        pass
+        self.assertFalse(is_book_borrowed)
+
+if __name__ == '__main__':
+    unittest.main()
