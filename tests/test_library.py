@@ -4,6 +4,8 @@ from unittest.mock import Mock
 import os.path
 from os import path
 from library.library import Library
+from library.library_db_interface import Library_DB
+from library.ext_api_interface import Books_API
 from library.patron import Patron
 
 dummy_book_list_json = [
@@ -71,9 +73,30 @@ book_language_list = [
 
 class TestLibrary(TestCase):
 
+    def test_library_db_created(self):
+        # Action
+        lib_obj = Library()
+        # Removes the instance of the db.json created
+        if path.exists('db.json'):
+            os.remove('db.json')
+
+        # Assert
+        self.assertIsInstance(lib_obj.db, Library_DB)
+
+    def test_book_api_created(self):
+        # Action
+        lib_obj = Library()
+        # Removes the instance of the db.json created
+        if path.exists('db.json'):
+            os.remove('db.json')
+
+        # Assert
+        self.assertIsInstance(lib_obj.api, Books_API)
+
+
     def test_constructor_works_as_intended(self):
         # Assume
-
+        lib_obj = Library()
         # Action
 
         # Assert
