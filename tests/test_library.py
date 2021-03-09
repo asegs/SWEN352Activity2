@@ -1,7 +1,11 @@
 from unittest import TestCase
 from unittest.mock import Mock
+import os.path
+from os import path
 
 from library.library import Library
+from library.library_db_interface import Library_DB
+from library.patron import Patron
 
 dummy_book_list_json = [
     {
@@ -247,34 +251,107 @@ class TestLibrary(TestCase):
         # Assert
         self.assertTrue(is_same)
 
+    def test_db_storage_is_0_when_created(self):
+        # Assume
+        db_obj = Library_DB()
+        # Action
+        storage_count = db_obj.get_patron_count()
+        # Assert
+
+        self.assertEqual(storage_count, 0)
+
     def test_patron_added_to_library_db(self):
         # Assume
+        first_name = 'Sam'
+        last_name = 'Wheeler'
+        age = 27
+        member_id = 100001
 
         # Action
+        lib_obj = Library()
+        lib_obj.db.get_patron_count()
+        lib_obj.register_patron(first_name, last_name, age, member_id)
+        storage_count = lib_obj.db.get_patron_count()
+        # Removes the instance of the db.json created
+        if path.exists('db.json'):
+            os.remove('db.json')
 
         # Assert
-        pass
+        self.assertEqual(storage_count, 1)
 
     def test_patron_exists_in_library_db(self):
         # Assume
+        first_name = 'Sam'
+        last_name = 'Wheeler'
+        age = 27
+        member_id = 100001
 
         # Action
+        lib_obj = Library()
+        lib_obj.db.get_patron_count()
+        id = lib_obj.register_patron(first_name, last_name, age, member_id)
+        id = lib_obj.register_patron(first_name, last_name, age, member_id)
+        # Removes the instance of the db.json created
+        if path.exists('db.json'):
+            os.remove('db.json')
 
         # Assert
-        pass
+        self.assertEqual(None, id)
 
     def test_patron_is_registered_in_db(self):
         # Assume
+        first_name = 'Sam'
+        last_name = 'Wheeler'
+        age = 27
+        member_id = 100001
 
         # Action
+        lib_obj = Library()
+        lib_obj.db.get_patron_count()
+        id = lib_obj.register_patron(first_name, last_name, age, member_id)
+        # Removes the instance of the db.json created
+        if path.exists('db.json'):
+            os.remove('db.json')
 
         # Assert
-        pass
+        self.assertEqual(id, 1)
+
+    def test_another_patron_exists_in_db(self):
+        # Assume
+        first_name = 'Sam'
+        last_name = 'Wheeler'
+        age = 27
+        member_id = 100001
+
+        fnamr = 'Winston'
+        lname = 'Schmear'
+        age_2 = 31
+        member_id_2 = 100002
+
+        # Action
+        lib_obj = Library()
+        lib_obj.db.get_patron_count()
+        id = lib_obj.register_patron(first_name, last_name, age, member_id)
+        id = lib_obj.register_patron(fnamr, lname, age_2, member_id_2)
+        # Removes the instance of the db.json created
+        if path.exists('db.json'):
+            os.remove('db.json')
+
+        # Assert
+        self.assertEqual(id, 2)
 
     def test_patron_is_not_registered_in_db(self):
         # Assume
+        first_name = 'Sam'
+        last_name = 'Wheeler'
+        age = 27
+        member_id = 100001
 
         # Action
+        lib_obj = Library()
+
+        lib_obj.db.get_patron_count()
+        id = lib_obj.register_patron(first_name, last_name, age, member_id)
 
         # Assert
         pass
