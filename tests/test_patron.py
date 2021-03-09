@@ -1,6 +1,6 @@
 import unittest
 
-from src.library.patron import *
+from library.patron import Patron, InvalidNameException
 
 
 class TestPatron(unittest.TestCase):
