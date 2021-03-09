@@ -93,16 +93,6 @@ class TestLibrary(TestCase):
         # Assert
         self.assertIsInstance(lib_obj.api, Books_API)
 
-
-    def test_constructor_works_as_intended(self):
-        # Assume
-        lib_obj = Library()
-        # Action
-
-        # Assert
-
-        pass
-
     def test_book_is_ebook(self):
         # Assume
         book_title = 'Adventures of Elvis'
