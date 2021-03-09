@@ -96,7 +96,7 @@ class TestGetBookInfo(unittest.TestCase):
     def test_get_book_info_no_publisher(self):
         with patch('library.ext_api_interface.Books_API.make_request') as mock_get:
             mock_get.return_value = {
-                'docs': [{'title': 'Redwall','publish_year': 1986, 'language': 'English'}]}
+                'docs': [{'title': 'Redwall', 'publish_year': 1986, 'language': 'English'}]}
             expected_book = {'title': 'Redwall', 'publish_year': 1986, 'language': 'English'}
             response = Books_API.get_book_info(self.books, "Redwall")
             self.assertEqual(expected_book, response[0])
@@ -135,7 +135,51 @@ class TestGetBookInfo(unittest.TestCase):
     def test_get_book_info_two_books(self):
         with patch('library.ext_api_interface.Books_API.make_request') as mock_get:
             mock_get.return_value = {
-                'docs': [{'title': 'Redwall', 'publisher': 'Philomel', 'publish_year': 1986, 'language': 'English'},{'title':'Cornflower'}]}
-            expected_books = [{'title': 'Redwall', 'publisher': 'Philomel', 'publish_year': 1986, 'language': 'English'},{'title':'Cornflower'}]
+                'docs': [{'title': 'Redwall', 'publisher': 'Philomel', 'publish_year': 1986, 'language': 'English'},
+                         {'title': 'Cornflower'}]}
+            expected_books = [
+                {'title': 'Redwall', 'publisher': 'Philomel', 'publish_year': 1986, 'language': 'English'},
+                {'title': 'Cornflower'}]
             response = Books_API.get_book_info(self.books, "Redwall")
             self.assertEqual(expected_books, response)
+
+
+class TestGetEbooks(unittest.TestCase):
+    def setUp(self):
+        self.books = Books_API()
+
+    def test_get_ebook_normal(self):
+        with patch('library.ext_api_interface.Books_API.make_request') as mock_get:
+            mock_get.return_value = {
+                'docs': [{'ebook_count_i': 1, 'title': 'Redwall'}]}
+            expected_ebook = {'ebook_count': 1, 'title': 'Redwall'}
+            response = Books_API.get_ebooks(self.books, "Redwall")
+            self.assertEqual(expected_ebook, response[0])
+
+    def test_get_ebook_count_zero(self):
+        with patch('library.ext_api_interface.Books_API.make_request') as mock_get:
+            mock_get.return_value = {
+                'docs': [{'ebook_count_i': 0, 'title': 'Redwall'}]}
+            response =  Books_API.get_ebooks(self.books,"Redwall")
+            self.assertEqual(0,len(response))
+
+    def test_get_ebook_no_data(self):
+        with patch('library.ext_api_interface.Books_API.make_request') as mock_get:
+            response = Books_API.get_ebooks(self.books, "Redwall")
+            self.assertEqual(0,len(response))
+
+    def test_get_ebooks_two(self):
+        with patch('library.ext_api_interface.Books_API.make_request') as mock_get:
+            mock_get.return_value = {
+                'docs': [{'ebook_count_i': 1, 'title': 'Redwall'},{'ebook_count_i':5,'title':'Cornflower'}]}
+            expected_ebooks = [{'ebook_count': 1, 'title': 'Redwall'},{'ebook_count':5,'title':'Cornflower'}]
+            response = Books_API.get_ebooks(self.books, "Redwall")
+            self.assertEqual(expected_ebooks, response)
+
+    def test_get_ebooks_three_one_fail(self):
+        with patch('library.ext_api_interface.Books_API.make_request') as mock_get:
+            mock_get.return_value = {
+                'docs': [{'ebook_count_i': 1, 'title': 'Redwall'},{'ebook_count_i':5,'title':'Cornflower'},{'title':'Mossflower','ebook_count_i':0}]}
+            expected_ebooks = [{'ebook_count': 1, 'title': 'Redwall'},{'ebook_count':5,'title':'Cornflower'}]
+            response = Books_API.get_ebooks(self.books, "Redwall")
+            self.assertEqual(expected_ebooks, response)
