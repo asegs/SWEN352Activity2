@@ -4,7 +4,6 @@ from unittest.mock import Mock
 import os.path
 from os import path
 from library.library import Library
-from library.library_db_interface import Library_DB
 from library.patron import Patron
 
 dummy_book_list_json = [
@@ -71,11 +70,6 @@ book_language_list = [
 
 
 class TestLibrary(TestCase):
-
-    def setUp(self) -> None:
-        self.library = Library()
-        self.patron = Patron()
-        self.library_db = Library_DB()
 
     def test_constructor_works_as_intended(self):
         # Assume
@@ -256,15 +250,6 @@ class TestLibrary(TestCase):
         # Assert
         self.assertTrue(is_same)
 
-    def test_db_storage_is_0_when_created(self):
-        # Assume
-        db_obj = Library_DB()
-        # Action
-        storage_count = db_obj.get_patron_count()
-        # Assert
-
-        self.assertEqual(storage_count, 0)
-
     def test_patron_added_to_library_db(self):
         # Assume
         first_name = 'Sam'
@@ -275,13 +260,14 @@ class TestLibrary(TestCase):
         # Action
         lib_obj = Library()
         lib_obj.register_patron(first_name, last_name, age, member_id)
-        storage_count = lib_obj.db.get_patron_count()
+        patron = Patron(first_name, last_name, age, member_id)
+        is_patron_present = lib_obj.is_patron_registered(patron)
         # Removes the instance of the db.json created
         if path.exists('db.json'):
             os.remove('db.json')
 
         # Assert
-        self.assertEqual(storage_count, 1)
+        self.assertTrue(is_patron_present)
 
     def test_patron_exists_in_library_db(self):
         # Assume
@@ -432,6 +418,7 @@ class TestLibrary(TestCase):
 
         # Assert
         self.assertFalse(is_book_borrowed)
+
 
 if __name__ == '__main__':
     unittest.main()
