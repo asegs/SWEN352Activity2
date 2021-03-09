@@ -75,80 +75,80 @@ class TestLibrary(TestCase):
 
     def test_library_db_created(self):
         # Action
-        lib_obj = Library()
+        CuT = Library()
         # Removes the instance of the db.json created
         if path.exists('db.json'):
             os.remove('db.json')
 
         # Assert
-        self.assertIsInstance(lib_obj.db, Library_DB)
+        self.assertIsInstance(CuT.db, Library_DB)
 
     def test_book_api_created(self):
         # Action
-        lib_obj = Library()
+        CuT = Library()
         # Removes the instance of the db.json created
         if path.exists('db.json'):
             os.remove('db.json')
 
         # Assert
-        self.assertIsInstance(lib_obj.api, Books_API)
+        self.assertIsInstance(CuT.api, Books_API)
 
     def test_book_is_ebook(self):
         # Assume
         book_title = 'Adventures of Elvis'
 
         # Action
-        lib_obj = Library()
-        lib_obj.api = Mock()
-        lib_obj.api.get_ebooks.return_value = dummy_book_list_json
+        CuT = Library()
+        CuT.api = Mock()
+        CuT.api.get_ebooks.return_value = dummy_book_list_json
 
         # Assert
-        self.assertTrue(lib_obj.is_ebook(book_title))
+        self.assertTrue(CuT.is_ebook(book_title))
 
     def test_book_is_not_ebook(self):
         # Assume
         book_title = 'Adventures of Dino'
 
         # Action
-        lib_obj = Library()
-        lib_obj.api = Mock()
-        lib_obj.api.get_ebooks.return_value = dummy_book_list_json
+        CuT = Library()
+        CuT.api = Mock()
+        CuT.api.get_ebooks.return_value = dummy_book_list_json
 
         # Assert
-        self.assertFalse(lib_obj.is_ebook(book_title))
+        self.assertFalse(CuT.is_ebook(book_title))
 
     def test_gets_book_count_for_more_than_zero(self):
         # Assume
         book_title = 'Adventures of Elvis'
 
         # Action
-        lib_obj = Library()
-        lib_obj.api = Mock()
-        lib_obj.api.get_ebooks.return_value = dummy_similar_book_list_json
+        CuT = Library()
+        CuT.api = Mock()
+        CuT.api.get_ebooks.return_value = dummy_similar_book_list_json
 
         # Assert
-        self.assertEqual(lib_obj.get_ebooks_count(book_title), 10)
+        self.assertEqual(CuT.get_ebooks_count(book_title), 10)
 
     def test_gets_book_count_for_zero_books(self):
         # Assume
         book_title = 'It is me or you'
 
         # Action
-        lib_obj = Library()
-        lib_obj.api = Mock()
-        lib_obj.api.get_ebooks.return_value = []
+        CuT = Library()
+        CuT.api = Mock()
+        CuT.api.get_ebooks.return_value = []
 
         # Assert
-        self.assertEqual(lib_obj.get_ebooks_count(book_title), 0)
+        self.assertEqual(CuT.get_ebooks_count(book_title), 0)
 
     def test_gets_book_count_if_no_book_is_there(self):
         # Assume
         book_title = 'Adventures of Dino'
 
         # Action
-        lib_obj = Library()
-        lib_obj.api = Mock()
-        lib_obj.api.get_ebooks.return_value = [
+        CuT = Library()
+        CuT.api = Mock()
+        CuT.api.get_ebooks.return_value = [
             {
                 'title': 'Adventures of Dino',
                 'ebook_count': 0
@@ -156,7 +156,7 @@ class TestLibrary(TestCase):
         ]
 
         # Assert
-        self.assertEqual(lib_obj.get_ebooks_count(book_title), 0)
+        self.assertEqual(CuT.get_ebooks_count(book_title), 0)
 
     def test_author_entered_for_book_is_true(self):
         # Assume
@@ -164,12 +164,12 @@ class TestLibrary(TestCase):
         book_author = 'Dummy Name'
 
         # Action
-        lib_obj = Library()
-        lib_obj.api = Mock()
-        lib_obj.api.books_by_author.return_value = dummy_author_book_list_json
+        CuT = Library()
+        CuT.api = Mock()
+        CuT.api.books_by_author.return_value = dummy_author_book_list_json
 
         # Assert
-        self.assertTrue(lib_obj.is_book_by_author(book_author, book_title))
+        self.assertTrue(CuT.is_book_by_author(book_author, book_title))
 
     def test_author_entered_for_book_is_false(self):
         # Assume
@@ -177,12 +177,12 @@ class TestLibrary(TestCase):
         book_author = 'Dummy Name'
 
         # Action
-        lib_obj = Library()
-        lib_obj.api = Mock()
-        lib_obj.api.books_by_author.return_value = dummy_author_book_list_json
+        CuT = Library()
+        CuT.api = Mock()
+        CuT.api.books_by_author.return_value = dummy_author_book_list_json
 
         # Assert
-        self.assertFalse(lib_obj.is_book_by_author(book_author, book_title))
+        self.assertFalse(CuT.is_book_by_author(book_author, book_title))
 
     def test_author_entered_for_book_has_no_book_in_library(self):
         # Assume
@@ -190,22 +190,22 @@ class TestLibrary(TestCase):
         book_author = 'Dummy Name'
 
         # Action
-        lib_obj = Library()
-        lib_obj.api = Mock()
-        lib_obj.api.books_by_author.return_value = []
+        CuT = Library()
+        CuT.api = Mock()
+        CuT.api.books_by_author.return_value = []
 
         # Assert
-        self.assertFalse(lib_obj.is_book_by_author(book_author, book_title))
+        self.assertFalse(CuT.is_book_by_author(book_author, book_title))
 
     def test_gets_languages_for_the_book(self):
         # Assume
         book_title = 'Harry Potter'
 
         # Action
-        lib_obj = Library()
-        lib_obj.api = Mock()
-        lib_obj.api.get_book_info.return_value = book_language_list
-        languages = lib_obj.get_languages_for_book(book_title)
+        CuT = Library()
+        CuT.api = Mock()
+        CuT.api.get_book_info.return_value = book_language_list
+        languages = CuT.get_languages_for_book(book_title)
 
         # Assert
         self.assertEqual(len(languages), len(book_language_list))
@@ -220,10 +220,10 @@ class TestLibrary(TestCase):
         ]
 
         # Action
-        lib_obj = Library()
-        lib_obj.api = Mock()
-        lib_obj.api.get_book_info.return_value = language_list
-        languages = lib_obj.get_languages_for_book(book_title)
+        CuT = Library()
+        CuT.api = Mock()
+        CuT.api.get_book_info.return_value = language_list
+        languages = CuT.get_languages_for_book(book_title)
 
         # Assert
         self.assertEqual(len(languages), 1)
@@ -234,10 +234,10 @@ class TestLibrary(TestCase):
         language_list = []
 
         # Action
-        lib_obj = Library()
-        lib_obj.api = Mock()
-        lib_obj.api.get_book_info.return_value = language_list
-        languages = lib_obj.get_languages_for_book(book_title)
+        CuT = Library()
+        CuT.api = Mock()
+        CuT.api.get_book_info.return_value = language_list
+        languages = CuT.get_languages_for_book(book_title)
 
         # Assert
         self.assertEqual(len(languages), 0)
@@ -247,10 +247,10 @@ class TestLibrary(TestCase):
         book_title = 'Harry Potter'
 
         # Action
-        lib_obj = Library()
-        lib_obj.api = Mock()
-        lib_obj.api.get_book_info.return_value = book_language_list
-        languages = lib_obj.get_languages_for_book(book_title)
+        CuT = Library()
+        CuT.api = Mock()
+        CuT.api.get_book_info.return_value = book_language_list
+        languages = CuT.get_languages_for_book(book_title)
         all_languages = list()
         for ebook in book_language_list:
             all_languages.append(ebook['language'][0])
@@ -263,55 +263,23 @@ class TestLibrary(TestCase):
         # Assert
         self.assertTrue(is_same)
 
-    def test_patron_added_to_library_db(self):
-        # Assume
-        first_name = 'Sam'
-        last_name = 'Wheeler'
-        age = 27
-        member_id = 100001
-
-        # Action
-        lib_obj = Library()
-        lib_obj.register_patron(first_name, last_name, age, member_id)
-        patron = Patron(first_name, last_name, age, member_id)
-        is_patron_present = lib_obj.is_patron_registered(patron)
-        # Removes the instance of the db.json created
-        if path.exists('db.json'):
-            os.remove('db.json')
-
-        # Assert
-        self.assertTrue(is_patron_present)
-
-    def test_patron_exists_in_library_db(self):
-        # Assume
-        first_name = 'Sam'
-        last_name = 'Wheeler'
-        age = 27
-        member_id = 100001
-
-        # Action
-        lib_obj = Library()
-        lib_obj.register_patron(first_name, last_name, age, member_id)
-        is_patron_present = lib_obj.db.retrieve_patron(member_id)
-        # Removes the instance of the db.json created
-        if path.exists('db.json'):
-            os.remove('db.json')
-
-        # Assert
-        self.assertTrue(is_patron_present)
-
     def test_patron_is_registered_in_db(self):
         # Assume
         first_name = 'Sam'
         last_name = 'Wheeler'
         age = 27
         member_id = 100001
+        CuT = Library()
+        CuT.db = Mock()
+        CuT.db.insert_patron.return_value = 1
+        CuT.db.retrieve_patron.return_value = True
+        patron = Patron(first_name, last_name, age, member_id)
+        patron.get_memberID = Mock(return_value=1)
 
         # Action
         patron = Patron(first_name, last_name, age, member_id)
-        lib_obj = Library()
-        lib_obj.register_patron(first_name, last_name, age, member_id)
-        is_patron_registered = lib_obj.is_patron_registered(patron)
+        CuT.register_patron(first_name, last_name, age, member_id)
+        is_patron_registered = CuT.is_patron_registered(patron)
         # Removes the instance of the db.json created
         if path.exists('db.json'):
             os.remove('db.json')
@@ -319,44 +287,23 @@ class TestLibrary(TestCase):
         # Assert
         self.assertTrue(is_patron_registered)
 
-    def test_another_patron_exists_in_db(self):
-        # Assume
-        first_name = 'Sam'
-        last_name = 'Wheeler'
-        age = 27
-        member_id = 100001
-
-        fnamr = 'Winston'
-        lname = 'Schmear'
-        age_2 = 31
-        member_id_2 = 100002
-
-        # Action
-        lib_obj = Library()
-        lib_obj.db.get_patron_count()
-        lib_obj.register_patron(first_name, last_name, age, member_id)
-        lib_obj.register_patron(fnamr, lname, age_2, member_id_2)
-        patron = lib_obj.db.retrieve_patron(member_id_2)
-        # Removes the instance of the db.json created
-        if path.exists('db.json'):
-            os.remove('db.json')
-
-        # Assert
-        self.assertEqual(patron.get_memberID(), member_id_2)
-
     def test_patron_is_not_registered_in_db(self):
         # Assume
         first_name = 'Sam'
         last_name = 'Wheeler'
         age = 27
         member_id = 100001
+        CuT = Library()
+        CuT.db = Mock()
+        CuT.db.insert_patron.return_value = 1
+        CuT.db.retrieve_patron.return_value = False
+        patron = Patron(first_name, last_name, age, member_id)
+        patron.get_memberID = Mock(return_value=1)
 
         # Action
-        lib_obj = Library()
-        patron = Patron('Messi', 'Dahl', 88, 102002)
-        lib_obj.register_patron(first_name, last_name, age, member_id)
-        is_patron_registered = lib_obj.is_patron_registered(patron)
-
+        patron = Patron(first_name, last_name, age, member_id)
+        CuT.register_patron(first_name, last_name, age, member_id)
+        is_patron_registered = CuT.is_patron_registered(patron)
         # Removes the instance of the db.json created
         if path.exists('db.json'):
             os.remove('db.json')
@@ -370,14 +317,26 @@ class TestLibrary(TestCase):
         last_name = 'Wheeler'
         age = 27
         member_id = 100001
-        patron = Patron(first_name, last_name, age, member_id)
         book_title = 'Adventures of Tintin'
 
+        CuT = Library()
+        CuT.db = Mock()
+        patron = Mock()
+
+        patron.fname.return_value = first_name
+        patron.lname.return_value = last_name
+        patron.age.return_value = age
+        patron.memberID.return_value = member_id
+        patron.borrowed_books.return_value = []
+        CuT.db.update_patron.return_value = True
+        patron.add_borrowed_book.return_value = True
+        patron.get_borrowed_books.return_value = [
+            book_title.lower()
+        ]
+
         # Action
-        lib_obj = Library()
-        lib_obj.register_patron(first_name, last_name, age, member_id)
-        lib_obj.borrow_book(book_title, patron)
-        is_book_borrowed = lib_obj.is_book_borrowed(book_title, patron)
+        CuT.borrow_book(book_title, patron)
+        is_book_borrowed = CuT.is_book_borrowed(book_title, patron)
 
         # Removes the instance of the db.json created
         if path.exists('db.json'):
@@ -392,15 +351,26 @@ class TestLibrary(TestCase):
         last_name = 'Wheeler'
         age = 27
         member_id = 100001
-        patron = Patron(first_name, last_name, age, member_id)
-        book_title = 'Adventures of Tintin'
-        another_book_title = 'NO adventure here'
+        book_title = 'Adventures of Adam'
+
+        CuT = Library()
+        CuT.db = Mock()
+        patron = Mock()
+
+        patron.fname.return_value = first_name
+        patron.lname.return_value = last_name
+        patron.age.return_value = age
+        patron.memberID.return_value = member_id
+        patron.borrowed_books.return_value = []
+        CuT.db.update_patron.return_value = True
+        patron.add_borrowed_book.return_value = True
+        patron.get_borrowed_books.return_value = [
+            'Some other book title'
+        ]
 
         # Action
-        lib_obj = Library()
-        lib_obj.register_patron(first_name, last_name, age, member_id)
-        lib_obj.borrow_book(book_title, patron)
-        is_book_borrowed = lib_obj.is_book_borrowed(another_book_title, patron)
+        CuT.borrow_book(book_title, patron)
+        is_book_borrowed = CuT.is_book_borrowed(book_title, patron)
 
         # Removes the instance of the db.json created
         if path.exists('db.json'):
@@ -415,15 +385,27 @@ class TestLibrary(TestCase):
         last_name = 'Wheeler'
         age = 27
         member_id = 100001
-        patron = Patron(first_name, last_name, age, member_id)
         book_title = 'Adventures of Tintin'
 
+        CuT = Library()
+        CuT.db = Mock()
+        patron = Mock()
+
+        patron.fname.return_value = first_name
+        patron.lname.return_value = last_name
+        patron.age.return_value = age
+        patron.memberID.return_value = member_id
+        patron.borrowed_books.return_value = [
+            book_title.lower()
+        ]
+        CuT.db.update_patron.return_value = True
+        patron.return_borrowed_book.return_value = True
+        patron.get_borrowed_books.return_value = []
+
         # Action
-        lib_obj = Library()
-        lib_obj.register_patron(first_name, last_name, age, member_id)
-        lib_obj.borrow_book(book_title, patron)
-        lib_obj.return_borrowed_book(book_title, patron)
-        is_book_borrowed = lib_obj.is_book_borrowed(book_title, patron)
+        CuT.borrow_book(book_title, patron)
+        CuT.return_borrowed_book(book_title, patron)
+        is_book_borrowed = CuT.is_book_borrowed(book_title, patron)
 
         # Removes the instance of the db.json created
         if path.exists('db.json'):
