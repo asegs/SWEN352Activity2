@@ -354,7 +354,7 @@ class TestLibrary(TestCase):
         id = lib_obj.register_patron(first_name, last_name, age, member_id)
 
         # Assert
-        pass
+        self.assertEqual(1, 2)
 
     def test_patron_has_borrowed_book(self):
         # Assume
