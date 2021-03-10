@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import Mock, patch
 from library.ext_api_interface import *
+import requests
 
 
 class TestMakeRequest(unittest.TestCase):
@@ -17,6 +18,12 @@ class TestMakeRequest(unittest.TestCase):
     def test_make_failed_request(self):
         with patch('library.ext_api_interface.requests.get') as mock_get:
             mock_get.return_value.status_code = 205
+            response = Books_API.make_request(self.books, "http://openlibrary.org/search.json")
+            self.assertIsNone(response)
+
+    def test_connection_error(self):
+        with patch('library.ext_api_interface.requests.get') as mock_get:
+            mock_get.side_effect = requests.ConnectionError
             response = Books_API.make_request(self.books, "http://openlibrary.org/search.json")
             self.assertIsNone(response)
 
@@ -77,6 +84,7 @@ class TestGetBooksByAuthor(unittest.TestCase):
 
     def test_no_books_found_no_data(self):
         with patch('library.ext_api_interface.Books_API.make_request') as mock_get:
+            mock_get.return_value = False
             response = Books_API.books_by_author(self.books, "Brian Jacques")
             self.assertEqual(0, len(response))
 
@@ -143,6 +151,13 @@ class TestGetBookInfo(unittest.TestCase):
             response = Books_API.get_book_info(self.books, "Redwall")
             self.assertEqual(expected_books, response)
 
+    def test_get_book_info_no_data(self):
+        with patch('library.ext_api_interface.Books_API.make_request') as mock_get:
+            mock_get.return_value = False
+            response = Books_API.get_book_info(self.books, "Redwall")
+            self.assertEqual(0,len(response))
+
+
 
 class TestGetEbooks(unittest.TestCase):
     def setUp(self):
@@ -165,6 +180,7 @@ class TestGetEbooks(unittest.TestCase):
 
     def test_get_ebook_no_data(self):
         with patch('library.ext_api_interface.Books_API.make_request') as mock_get:
+            mock_get.return_value = False
             response = Books_API.get_ebooks(self.books, "Redwall")
             self.assertEqual(0,len(response))
 
