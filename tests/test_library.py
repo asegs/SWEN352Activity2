@@ -75,6 +75,7 @@ class TestLibrary(TestCase):
 
     def setUp(self) -> None:
         self.CuT = Library()
+        self.CuT.db.close_db()
         self.patron = Mock()
         self.book_title_there = 'Adventures of Elvis'
         self.book_title_not_there = 'Adventures of Dino'
