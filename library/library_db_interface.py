@@ -3,9 +3,9 @@ Filename: library_db_interface.py
 Description: module used for interacting with the local database
 """
 
-from tinydb import TinyDB, Query
 
 from library.patron import Patron
+from tinydb import TinyDB, Query
 
 
 class Library_DB:
